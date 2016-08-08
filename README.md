@@ -12,14 +12,12 @@ install `respec-given-lab` locally
 
 ## Usage
 
-
-    mocha --ui respec-given --require respec-given/na-loader
-    ```coffeescript
-    Lab = require('lab')
-    lab = exports.lab = Lab.script()
-    gwt = require('respec-given-lab')(lab)
-    {describe, context, Given, When, Then, And} = gwt
-    ```
+```coffeescript
+Lab = require('lab')
+lab = exports.lab = Lab.script()
+gwt = require('respec-given-lab')(lab)
+{describe, context, Given, When, Then, And} = gwt
+```
 
 
 ### Transform test code
