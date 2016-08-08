@@ -1,6 +1,6 @@
-# respec-given
+# respec-given-lab
 
-[![Build Status](https://travis-ci.org/cades/respec-given-lab.svg?branch=master)](https://travis-ci.org/cades/respec-given)
+[![Build Status](https://travis-ci.org/cades/respec-given-lab.svg?branch=master)](https://travis-ci.org/cades/respec-given-lab)
 
 respec-given-lab is an extension to the lab testing framework. It encourages cleaner, readable, and maintainable specs/tests using `Given`, `When`, and `Then`.
 
