@@ -27,7 +27,7 @@ module.exports = function(lab) {
   context.it = context.specify = function (title) {
     const options = arguments.length === 3 ? arguments[1] : {}
     const fn = arguments.length === 3 ? arguments[2] : arguments[1]
-    const unifiedFn = fn.length > 0 ? fn : function(done) { fn() && done() }
+    const unifiedFn = fn.length > 0 ? fn : function(done) { Promise.resolve(fn()).then(function(){ done() }) }
     core.it.call(null, title, unifiedFn)
   }
 
