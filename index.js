@@ -39,6 +39,8 @@ module.exports = function(lab, opts) {
   // traditional describe/it BDD interface
 
   context.describe = context.context = function(title) {
+    if (arguments.length < 2)
+      throw new Error('too few arguments. Correct usage: describe_or_context(title, [options], fn)');
     const options = arguments.length === 3 ? arguments[1] : {}
     const fn = arguments.length === 3 ? arguments[2] : arguments[1],
           wrappedFn = core.describe.bind(null, title, fn)
