@@ -8,7 +8,7 @@
   },
   "main": "./index.js",
   "dependencies": {
-    "respec-given-core": "0.0.16"
+    "respec-given-core": "0.0.17"
   },
   "devDependencies": {
     "coffee-script": "1.10.0",
