@@ -12,11 +12,10 @@ install `respec-given-lab` locally
 
 ## Usage
 
-```coffeescript
-Lab = require('lab')
-lab = exports.lab = Lab.script()
-gwt = require('respec-given-lab')(lab)
-{describe, context, Given, When, Then, And} = gwt
+```javascript
+const Lab = require('lab');
+const lab = exports.lab = Lab.script();
+const {describe, context, Given, When, Then, And} = require('respec-given-lab')(lab);
 ```
 
 
@@ -25,7 +24,6 @@ gwt = require('respec-given-lab')(lab)
 `respec-given` provides a tool, which can analysis test code's `Then` expression, gather context information, and generate code that carries these information. When assertion failed (return false), these information are used to evaluate failed Then clause's subexpression and generate diagnosis message for you. Since `lab` already provide `--transform` option, applying the tool is easy. Just write a `transform.js`:
 
 ```js
-var coffee = require('coffee-script')
 var transform = require('respec-given-lab/transform')
 
 module.exports = [
@@ -34,19 +32,6 @@ module.exports = [
       return content
 
     return transform(content, filename)
-  } },
-  { ext: '.coffee', transform: (content, filename) => {
-    if (filename.indexOf('node_modules') !== -1)
-      return content
-
-    const result = coffee.compile(content, {
-      sourceMap: true,
-      inline: true,
-      sourceRoot: '/',
-      sourceFiles: [filename]
-    })
-
-    return transform(result.js, filename)
   } }
 ]
 ```
@@ -74,61 +59,69 @@ On the other hand, if you are using assertion library (like node.js built-in `as
 
 ## Example
 
-Here is a spec written in respec-given and CoffeeScript. (for JavaScript example, click [here](#lexical-style))
+Here is a spec written in respec-given.
 
-```coffeescript
-Lab = require('lab')
-lab = exports.lab = Lab.script()
-gwt = require('respec-given-lab')(lab)
-{describe, context, Given, GivenI, When, Invariant, Then, And} = gwt
+```javascript
+const Lab = require('lab');
+const lab = exports.lab = Lab.script();
+const {describe, context, Given, GivenI, When, Invariant, Then, And} = require('respec-given-lab')(lab);
 
-Stack = require('../stack')
+const Stack = require('../stack');
 
-describe 'Stack', ->
+describe('Stack', () => {
 
-  stack_with = (initial_contents) ->
-    stack = Object.create Stack
-    initial_contents.forEach (item) -> stack.push(item)
-    stack
+  const stack_with = (initial_contents) => {
+    const stack = Object.create(Stack);
+    initial_contents.forEach(item => stack.push(item));
+    return stack;
+  };
 
-  Given stack: -> stack_with(@initial_contents)
-  Invariant -> @stack.empty() == (@stack.depth() == 0)
+  Given({stack: function() { return stack_with(this.initial_contents); }});
+  Invariant(function() { return this.stack.empty() === (this.stack.depth() === 0); });
 
-  context "with no items", ->
-    Given initial_contents: -> []
-    Then -> @stack.depth() == 0
+  context("with no items", () => {
+    Given({initial_contents: () => []});
+    Then(function() { return this.stack.depth() === 0; });
 
-    context "when pushing", ->
-      When -> @stack.push('an_item')
+    context("when pushing", () => {
+      When(function() { this.stack.push('an_item'); });
 
-      Then -> @stack.depth() == 1
-      Then -> @stack.top() == 'an_item'
+      Then(function() { return this.stack.depth() === 1; });
+      Then(function() { return this.stack.top() === 'an_item'; });
+    });
+  });
 
-  context "with one item", ->
-    Given initial_contents: -> ['an_item']
+  context("with one item", () => {
+    Given({initial_contents: () => ['an_item']});
 
-    context "when popping", ->
-      When pop_result: -> @stack.pop()
+    context("when popping", () => {
+      When({pop_result: function() { this.stack.pop(); }});
 
-      Then -> @pop_result == 'an_item'
-      Then -> @stack.depth() == 0
+      Then(function() { return this.pop_result === 'an_item'; });
+      Then(function() { return this.stack.depth() === 0; });
+    });
+  });
 
-  context "with several items", ->
-    Given initial_contents: -> ['second_item', 'top_item']
-    GivenI original_depth: -> @stack.depth()
+  context("with several items", () => {
+    Given({initial_contents: () => ['second_item', 'top_item']});
+    GivenI({original_depth: function() { return this.stack.depth(); } });
 
-    context "when pushing", ->
-      When -> @stack.push('new_item')
+    context("when pushing", () => {
+      When(function() { this.stack.push('new_item'); });
 
-      Then -> @stack.top() == 'new_item'
-      Then -> @stack.depth() == @original_depth + 1
+      Then(function() { return this.stack.top() === 'new_item'; });
+      Then(function() { return this.stack.depth() === this.original_depth - 1; });
+    });
 
-    context "when popping", ->
-      When pop_result: -> @stack.pop()
+    context("when popping", () => {
+      When({pop_result: function() { this.stack.pop(); }});
 
-      Then -> @pop_result == 'top_item'
-      Then -> @stack.top() == 'second_item'
-      Then -> @stack.depth() == @original_depth - 1
+      Then(function() { return this.pop_result === 'top_item'; });
+      Then(function() { return this.stack.top() === 'second_item'; });
+      Then(function() { return this.stack.depth() === this.original_depth - 1; });
+    });
+  });
+});
 ```
 
 click [here](https://github.com/cades/respec-given#given) to see detail API documentation.
