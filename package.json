@@ -13,13 +13,13 @@
   "devDependencies": {
     "coffee-script": "1.10.0",
     "expect.js": "0.3.1",
+    "fsmonitor": "0.2.4",
     "lab": "10.9.0",
-    "testem": "1.8.1",
     "zen-observable": "0.2.1"
   },
   "scripts": {
     "test": "npm run link && lab",
-    "tdd": "testem",
+    "tdd": "fsmonitor -s -p '+*.js' -d . npm run test",
     "link": "rm -rf node_modules/respec-given-lab && mkdir -p node_modules/respec-given-lab && cd node_modules/respec-given-lab && ln -s ../../package.json package.json && ln -s ../../index.js index.js && ln -s ../../lib lib && ln -s ../../mocha mocha && cd -"
   },
   "keywords": [
