@@ -11,9 +11,7 @@ describe("GivenI(var, fn)", () => {
     const Character = name => {
       return {
         hit_points: 20,
-        attack: function(anemy, n) {
-          return anemy.hit_points -= n;
-        }
+        attack: (anemy, n) => anemy.hit_points -= n
       };
     };
 
@@ -21,49 +19,41 @@ describe("GivenI(var, fn)", () => {
     Given('defender', () => Character("Defender"));
 
     describe('sync function', () => {
-      GivenI('original_hp', function() { return this.defender.hit_points; });
-      When(function() { return this.attacker.attack(this.defender, 1); });
-      Then(function() { return this.defender.hit_points === this.original_hp - 1; });
+      GivenI('original_hp', $ => $.defender.hit_points);
+      When($ => $.attacker.attack($.defender, 1));
+      Then($ => $.defender.hit_points === $.original_hp - 1);
     });
 
     describe('sync function that return a promise', () => {
-      GivenI('original_hp', function() { return Promise.resolve(this.defender.hit_points); });
-      When(function() { return this.attacker.attack(this.defender, 1); });
-      Then(function() { return this.defender.hit_points === this.original_hp - 1; });
+      GivenI('original_hp', $ => Promise.resolve($.defender.hit_points));
+      When($ => $.attacker.attack($.defender, 1));
+      Then($ => $.defender.hit_points === $.original_hp - 1);
     });
 
     describe('async function', () => {
-      GivenI('original_hp', function($, done) {
-        setTimeout(function() {
-          done(null, this.defender.hit_points);
-        }.bind(this), 0)
+      GivenI('original_hp', ($, done) => {
+        setTimeout(() => {
+          done(null, $.defender.hit_points);
+        }, 0)
       });
-      When(function() { return this.attacker.attack(this.defender, 1); });
-      Then(function() { return this.defender.hit_points === this.original_hp - 1; });
+      When($ => $.attacker.attack($.defender, 1));
+      Then($ => $.defender.hit_points === $.original_hp - 1);
     });
   });
 
   describe('support promise', () => {
-    GivenI(function() {
-      return Promise.resolve().then(function() {
-        this.result = 'cool';
-      }.bind(this));
-    });
-    Then(function() { return this.result === 'cool'; });
+    GivenI($ => Promise.resolve().then(() => $.result = 'cool'));
+    Then($ => $.result === 'cool');
   });
 
   describe('support generator', () => {
-    Given(function*() { this.result = (yield Promise.resolve('cool')); });
-    Then(function() { return this.result === 'cool'; });
+    Given(function*($) { $.result = (yield Promise.resolve('cool')); });
+    Then($ => $.result === 'cool');
   });
 
   describe('support observable', () => {
-    Given(function() {
-      return Observable.of('cool').map(function(x) {
-        this.result = x;
-      }.bind(this));
-    });
-    Then(function() { return this.result === 'cool'; });
+    Given($ => Observable.of('cool').map(x => $.result = x));
+    Then($ => $.result === 'cool');
   });
 });
 
@@ -72,7 +62,7 @@ describe("GivenI(hash)", () => {
     GivenI({
       result: () => 'cool'
     });
-    Then(function() { return this.result === 'cool'; });
+    Then($ => $.result === 'cool');
   });
 });
 

@@ -16,7 +16,7 @@ describe('When(fn)', () => {
 
   describe('support async', () => {
     When(($, done) => {
-      setTimeout(function() {
+      setTimeout(() => {
         $.result = 'cool';
         return done();
       }, 0);
@@ -26,21 +26,17 @@ describe('When(fn)', () => {
 
   describe('support promise (automatically resolve)', () => {
     When($ => Promise.resolve().then(() => $.result = 'cool'));
-    Then(function() { return this.result === 'cool'; });
+    Then($ => $.result === 'cool');
   });
 
   describe('support generator', () => {
-    When(function*() { return this.result = (yield Promise.resolve('cool')); });
-    Then(function() { return this.result === 'cool'; });
+    When(function*($) { return $.result = (yield Promise.resolve('cool')); });
+    Then($ => $.result === 'cool');
   });
 
   describe('support observable', () => {
-    When(function() {
-      return Observable.of('cool').map(function(x) {
-        return this.result = x;
-      }.bind(this));
-    });
-    Then(function() { return this.result === 'cool'; });
+    When($ => Observable.of('cool').map(x => $.result = x));
+    Then($ => $.result === 'cool');
   });
 });
 
@@ -50,12 +46,12 @@ describe('When(result, fn)', () => {
 
     context('resolve', () => {
       When('result', () => Promise.resolve('cool'));
-      Then(function() { return this.result === 'cool'; });
+      Then($ => $.result === 'cool');
     });
 
     context('reject', () => {
       When('result', () => Promise.reject('oops!'));
-      Then(function() { return this.result === 'oops!'; });
+      Then($ => $.result === 'oops!');
     });
   });
 
@@ -63,12 +59,12 @@ describe('When(result, fn)', () => {
 
     context('success', () => {
       When('result', function*() { return (yield Promise.resolve('cool')); });
-      Then(function() { return this.result === 'cool'; });
+      Then($ => $.result === 'cool');
     });
 
     context('error', () => {
       When('result', function*() { return (yield Promise.reject('oops!')); });
-      Then(function() { return this.result === 'oops!'; });
+      Then($ => $.result === 'oops!');
     });
   });
 
@@ -76,84 +72,76 @@ describe('When(result, fn)', () => {
 
     context('success', () => {
       When('result', () => Observable.of('cool'));
-      Then(function() { return this.result[0] === 'cool'; });
+      Then($ => $.result[0] === 'cool');
     });
 
     context('error', () => {
-      When('result', function() {
-        return new Observable(function(observer) {
-          return observer.error('oops!');
-        });
-      });
-      Then(function() { return this.result === 'oops!'; });
+      When('result', () => new Observable(observer => observer.error('oops!')));
+      Then($ => $.result === 'oops!');
     });
   });
 
   describe('can capture thrown Error', () => {
-    When('result', function() { throw new Error('oops!'); });
-    Then(function() { return this.result.message === 'oops!'; });
+    When('result', () => { throw new Error('oops!'); });
+    Then($ => $.result.message === 'oops!');
   });
 
   describe('if return nothing, var is still set', () => {
-    When('result', function() {});
-    Then(function() { return this.result === undefined;});
-    And(function() { return 'result' in this; });
+    When('result', () => {});
+    Then($ => $.result === undefined);
+    And($ => 'result' in $);
   });
 });
 
 describe('When(result, fn(done))', () => {
 
   context('async callback', () => {
-    When('result', function($, done) {
-      setTimeout(function() {
-        return done(null, 'cool');
-      }, 0);
+    When('result', ($, done) => {
+      setTimeout(() => done(null, 'cool'), 0);
     });
-    Then(function() { return this.result === 'cool'; });
+    Then($ => $.result === 'cool');
   });
 
   describe('node-style callback (2nd arg)', () => {
-    When('result', function($, done) { done(null, 'cool'); });
-    Then(function() { return this.result === 'cool'; });
+    When('result', ($, done) => done(null, 'cool'));
+    Then($ => $.result === 'cool');
 
     describe('can handle falsy value', () => {
-      When('false', function($, cb) { cb(null, false); });
-      When('zero', function($, cb) { cb(null, 0); });
-      When('null', function($, cb) { cb(null, null); });
-      When('emptystr', function($, cb) { cb(null, ""); });
-      When('NaN', function($, cb) { cb(null, NaN); });
-      Then(function($) { return $["false"] === false; });
-      And(function($) { return $.zero === 0; });
-      And(function($) { return $["null"] === null; });
-      And(function($) { return $.emptystr === ''; });
-      And(function($) { return isNaN($.NaN); });
+      When('false', ($, cb) => cb(null, false));
+      When('zero', ($, cb) => cb(null, 0));
+      When('null', ($, cb) => cb(null, null));
+      When('emptystr', ($, cb) => cb(null, ""));
+      When('NaN', ($, cb) => cb(null, NaN));
+      Then($ => $["false"] === false);
+      And($ => $.zero === 0);
+      And($ => $["null"] === null);
+      And($ => $.emptystr === '');
+      And($ => isNaN($.NaN));
     });
   });
 
   describe('raw callback (1st arg)', () => {
-    When('result', function($, done) { done('cool'); });
-    Then(function() { return this.result === 'cool'; });
+    When('result', ($, done) => done('cool'));
+    Then($ => $.result === 'cool');
   });
 
   describe('can capture thrown Error', () => {
-    When('result', function($, done) { throw new Error('oops!'); });
-    Then(function() { return this.result.message === 'oops!'; });
+    When('result', ($, done) => { throw new Error('oops!'); });
+    Then($ => $.result.message === 'oops!');
   });
 
   describe('if return nothing, var is still set', () => {
-    When('result', function($, done) { done(); });
-    Then(function() { return this.result === undefined; });
-    And(function() { return 'result' in this; });
+    When('result', ($, done) => done());
+    Then($ => $.result === undefined);
+    And($ => 'result' in $);
   });
 });
 
 describe('When(result, hash)', () => {
   When({
-    result: function() {
-      return 'cool';
-    }
+    result: () => 'cool'
   });
-  Then(function() { return this.result === 'cool'; });
+  Then($ => $.result === 'cool');
 });
 
 describe('When(result, value) is forbidden', () => {

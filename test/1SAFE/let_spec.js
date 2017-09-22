@@ -8,13 +8,13 @@ const expect = require('expect.js');
 
 describe('Let(varname, fn)', () => {
 
-  describe('should be accessible on `this`', () => {
+  describe('should be accessible on context object `$`', () => {
     Let('user', () => 'cades');
-    Then(function() { return this.user === 'cades'; });
+    Then($ => $.user === 'cades');
   });
 
   describe('should be lazy', () => {
-    Let('x', function() { throw new Error('oops!'); });
+    Let('x', () => { throw new Error('oops!'); });
     Then(() => true);
   });
 
@@ -24,11 +24,11 @@ describe('Let(varname, fn)', () => {
       cnt++;
       return 1;
     });
-    Then(() => cnt === 0);
-    And(function() { return this.one; });
-    And(() => cnt === 1);
-    And(function() { return this.one; });
-    And(() => cnt === 1);
+    Then($ => cnt === 0);
+    And($ => $.one);
+    And($ => cnt === 1);
+    And($ => $.one);
+    And($ => cnt === 1);
   });
 });
 
