@@ -38,7 +38,7 @@ describe('Given(fn)', () => {
     });
 
     describe('support async', function() {
-      Given(function(done) {
+      Given(function($, done) {
         setTimeout(function() {
           this.subject = () => 'cool';
           done();
@@ -135,7 +135,7 @@ describe('Given(varname, fn)', () => {
           }, 0);
         };
       });
-      When('result', function(cb) { this.subject(cb); });
+      When('result', function($, cb) { this.subject(cb); });
       Then(function() { return this.result === 'cool'; });
     });
 

@@ -15,21 +15,17 @@ describe('When(fn)', () => {
   });
 
   describe('support async', () => {
-    When(function(done) {
+    When(($, done) => {
       setTimeout(function() {
-        this.result = 'cool';
+        $.result = 'cool';
         return done();
-      }.bind(this), 0);
+      }, 0);
     });
-    Then(function() { return this.result === 'cool'; });
+    Then($ => $.result === 'cool');
   });
 
   describe('support promise (automatically resolve)', () => {
-    When(function() {
-      return Promise.resolve().then(function() {
-        return this.result = 'cool';
-      }.bind(this));
-    });
+    When($ => Promise.resolve().then(() => $.result = 'cool'));
     Then(function() { return this.result === 'cool'; });
   });
 
@@ -108,7 +104,7 @@ describe('When(result, fn)', () => {
 describe('When(result, fn(done))', () => {
 
   context('async callback', () => {
-    When('result', function(done) {
+    When('result', function($, done) {
       setTimeout(function() {
         return done(null, 'cool');
       }, 0);
@@ -117,35 +113,35 @@ describe('When(result, fn(done))', () => {
   });
 
   describe('node-style callback (2nd arg)', () => {
-    When('result', function(done) { done(null, 'cool'); });
+    When('result', function($, done) { done(null, 'cool'); });
     Then(function() { return this.result === 'cool'; });
 
     describe('can handle falsy value', () => {
-      When('false', function(cb) { cb(null, false); });
-      When('zero', function(cb) { cb(null, 0); });
-      When('null', function(cb) { cb(null, null); });
-      When('emptystr', function(cb) { cb(null, ""); });
-      When('NaN', function(cb) { cb(null, NaN); });
-      Then(function() { return this["false"] === false; });
-      And(function() { return this.zero === 0; });
-      And(function() { return this["null"] === null; });
-      And(function() { return this.emptystr === ''; });
-      And(function() { return isNaN(this.NaN); });
+      When('false', function($, cb) { cb(null, false); });
+      When('zero', function($, cb) { cb(null, 0); });
+      When('null', function($, cb) { cb(null, null); });
+      When('emptystr', function($, cb) { cb(null, ""); });
+      When('NaN', function($, cb) { cb(null, NaN); });
+      Then(function($) { return $["false"] === false; });
+      And(function($) { return $.zero === 0; });
+      And(function($) { return $["null"] === null; });
+      And(function($) { return $.emptystr === ''; });
+      And(function($) { return isNaN($.NaN); });
     });
   });
 
   describe('raw callback (1st arg)', () => {
-    When('result', function(done) { done('cool'); });
+    When('result', function($, done) { done('cool'); });
     Then(function() { return this.result === 'cool'; });
   });
 
   describe('can capture thrown Error', () => {
-    When('result', function(done) { throw new Error('oops!'); });
+    When('result', function($, done) { throw new Error('oops!'); });
     Then(function() { return this.result.message === 'oops!'; });
   });
 
   describe('if return nothing, var is still set', () => {
-    When('result', function(done) { done(); });
+    When('result', function($, done) { done(); });
     Then(function() { return this.result === undefined; });
     And(function() { return 'result' in this; });
   });

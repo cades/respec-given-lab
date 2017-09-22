@@ -33,7 +33,7 @@ describe("GivenI(var, fn)", () => {
     });
 
     describe('async function', () => {
-      GivenI('original_hp', function(done) {
+      GivenI('original_hp', function($, done) {
         setTimeout(function() {
           done(null, this.defender.hit_points);
         }.bind(this), 0)
