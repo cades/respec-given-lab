@@ -1,6 +1,7 @@
 # respec-given-lab
 
 [![Build Status](https://travis-ci.org/cades/respec-given-lab.svg?branch=master)](https://travis-ci.org/cades/respec-given-lab)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fcades%2Frespec-given-lab.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fcades%2Frespec-given-lab?ref=badge_shield)
 
 respec-given-lab is an extension to the lab testing framework. It encourages cleaner, readable, and maintainable specs/tests using `Given`, `When`, and `Then`.
 
@@ -125,3 +126,7 @@ describe('Stack', () => {
 ```
 
 click [here](https://github.com/cades/respec-given#given) to see detail API documentation.
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fcades%2Frespec-given-lab.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fcades%2Frespec-given-lab?ref=badge_large)
