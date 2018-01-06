@@ -1,6 +1,6 @@
 {
   "name": "respec-given-lab",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "given syntax on top of lab testing framework",
   "author": {
     "name": "cades kao",
