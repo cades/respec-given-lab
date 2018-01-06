@@ -8,7 +8,7 @@
   },
   "main": "./index.js",
   "dependencies": {
-    "respec-given-core": "1.1.0"
+    "respec-given-core": "1.2.1"
   },
   "devDependencies": {
     "expect.js": "0.3.1",
